@@ -10,19 +10,60 @@
     </style>
 </head>
 <body>
+    <div>
+        <select id="playlistSelect"></select>
+        <button id="loadPlaylist">Load Playlist</button>
+    </div>
+
     <div id="player"></div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         var player;
 
+
+        
+
+        
+        var playlists = [
+            {"id": "PLEcPJ0g895A_a3ksxl3rrFudEF41qAOyG", "name": "AgoAGILI"},
+            {"id": "ANOTHER_PLAYLIST_ID", "name": "Playlist 2"}, 
+            {"id": "HEHEHE", "name":"GORAN"} 
+            // Add more playlists as needed
+        ];
+
+
+
+
+
+        
         function onYouTubeIframeAPIReady() {
+            populatePlaylists();
+        }
+
+        function populatePlaylists() {
+            var select = document.getElementById('playlistSelect');
+            playlists.forEach(function(playlist) {
+                var option = document.createElement('option');
+                option.value = playlist.id;
+                option.textContent = playlist.name;
+                select.appendChild(option);
+            });
+
+            loadPlayer(playlists[0].id); // Load the first playlist by default
+        }
+
+        function loadPlayer(playlistId) {
+            if (player) {
+                player.destroy(); // Destroy the existing player if any
+            }
+
             player = new YT.Player('player', {
                 height: '390',
                 width: '640',
                 playerVars: {
                     'listType': 'playlist',
-                    'list': 'PLEcPJ0g895A_a3ksxl3rrFudEF41qAOyG'
+                    'list': playlistId
                 },
                 events: {
                     'onReady': onPlayerReady
@@ -33,6 +74,11 @@
         function onPlayerReady(event) {
             event.target.playVideo();
         }
+
+        document.getElementById('loadPlaylist').addEventListener('click', function() {
+            var selectedPlaylist = document.getElementById('playlistSelect').value;
+            loadPlayer(selectedPlaylist);
+        });
     </script>
 </body>
 </html>
